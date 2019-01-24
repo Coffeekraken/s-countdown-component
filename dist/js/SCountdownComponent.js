@@ -70,8 +70,10 @@ function (_SWebComponent) {
      * @protected
      */
     value: function componentMount() {
-      _get(_getPrototypeOf(SCountdownComponent.prototype), "componentMount", this).call(this); // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
+      _get(_getPrototypeOf(SCountdownComponent.prototype), "componentMount", this).call(this); // add the global class on the element itself
 
+
+      this.classList.add(this.componentNameDash); // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
 
       this._update$Refs(); // create a new timer
 
@@ -150,7 +152,10 @@ function (_SWebComponent) {
 
       this._timespan = (0, _countdown.default)(start, new Date(this.props.endTimestamp * 1000)); // update html using the timespan
 
-      this._updateHtmlWithTimespan(this._timespan);
+      this._updateHtmlWithTimespan(this._timespan); // on tick callback
+
+
+      if (this.props.onTick) this.props.onTick(this);
     }
     /**
      * Update the html with the timespan

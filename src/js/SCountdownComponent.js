@@ -88,6 +88,9 @@ export default class SCountdownComponent extends SWebComponent {
   componentMount() {
     super.componentMount()
 
+    // add the global class on the element itself
+    this.classList.add(this.componentNameDash)
+
     // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
     this._update$Refs()
 
@@ -100,7 +103,6 @@ export default class SCountdownComponent extends SWebComponent {
 
     // first tick
     this._tick()
-
   }
 
   /**
@@ -158,6 +160,9 @@ export default class SCountdownComponent extends SWebComponent {
 
     // update html using the timespan
     this._updateHtmlWithTimespan(this._timespan)
+
+    // on tick callback
+    if (this.props.onTick) this.props.onTick(this)
   }
 
   /**

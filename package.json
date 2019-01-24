@@ -1,6 +1,6 @@
 {
   "name": "coffeekraken-s-countdown-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create a simple fully customizable countdown that support years, months, days, hours, minutes and seconds display",
   "main": "dist/index.js",
   "homepage": "http://coffeekraken.io",
