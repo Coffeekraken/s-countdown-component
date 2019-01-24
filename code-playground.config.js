@@ -40,6 +40,45 @@ module.exports = {
         body {
           padding: s-space(bigger);
         }
+
+        .s-countdown {
+          text-transform: uppercase;
+          font-size: s-rem(20px);
+        }
+
+        .s-countdown-digit-container {
+          position: relative;
+          background: s-color(secondary);
+          color: white;
+          padding: s-rem(10px) s-rem(15px);
+        }
+
+        @keyframes digit-in {
+          from {
+            opacity: 0;
+            transform: translateY(-50%);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes digit-out {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(50%);
+          }
+        }
+        .s-countdown-digit {
+          animation: digit-in .6s cubic-bezier(1,0,0,1) forwards 0s;
+        }
+        .s-countdown-digit--out {
+          animation: digit-out .4s cubic-bezier(1,0,0,1) forwards 0s;
+        }
       `
     },
     js: {

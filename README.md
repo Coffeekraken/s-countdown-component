@@ -79,6 +79,7 @@ Then simply use it inside your html like so:
 
 Each countdown elements like `[s-countdown-years]`, `[s-countdown-hours]`, etc... will contain his remaining digit. This digit will be wrapped inside a `span` that will have these classes:
 
+- `.s-countdown-digit-container`: Applied on the parent element
 - `.s-countdown-digit`: The main class applied during the whole life of the digit.
 - `.s-countdown-digit--out`: The class applied on the digit that need to get out.
 
