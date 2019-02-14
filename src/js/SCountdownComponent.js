@@ -1,7 +1,7 @@
 import SWebComponent from "coffeekraken-sugar/js/core/SWebComponent"
-import countdown from 'countdown'
-import STimer from 'coffeekraken-sugar/js/classes/STimer'
-import getTransmationDuration from 'coffeekraken-sugar/js/dom/getTransmationDuration'
+import countdown from "countdown"
+import STimer from "coffeekraken-sugar/js/classes/STimer"
+import getTransmationDuration from "coffeekraken-sugar/js/dom/getTransmationDuration"
 
 /**
  * Create a simple fully customizable countdown that support years, months, days, hours, minutes and seconds display
@@ -24,7 +24,6 @@ export default class SCountdownComponent extends SWebComponent {
    */
   static get defaultProps() {
     return {
-
       /**
        * Specify the end timestamp of the countdown
        * @prop
@@ -40,6 +39,22 @@ export default class SCountdownComponent extends SWebComponent {
       startTimestamp: null,
 
       /**
+       * Specify some step classes that will be applied on the component itself depending on remaining seconds
+       * For example. A step class named `hour1` with a timing of `3600` will be applied during the last `3600` seconds of the countdown
+       * @prop
+       * @type    {Object<Integer>}
+       */
+      stepClasses: {
+        week1: 3600 * 24 * 7,
+        day1: 3600 * 24,
+        hour1: 3600,
+        minutes30: 60 * 30,
+        minutes10: 60 * 10,
+        minutes5: 60 * 5,
+        minute1: 60
+      },
+
+      /**
        * Specify a callback to call on countdown complete
        * @prop
        * @type    {Function}
@@ -52,7 +67,6 @@ export default class SCountdownComponent extends SWebComponent {
        * @type    {Function}
        */
       onTick: null
-
     }
   }
 
@@ -62,7 +76,7 @@ export default class SCountdownComponent extends SWebComponent {
    * @protected
    */
   static get requiredProps() {
-    return ['endTimestamp']
+    return ["endTimestamp"]
   }
 
   /**
@@ -90,6 +104,9 @@ export default class SCountdownComponent extends SWebComponent {
 
     // add the global class on the element itself
     this.classList.add(this.componentNameDash)
+
+    // add the active class on the element itself
+    this.classList.add("active")
 
     // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
     this._update$Refs()
@@ -120,24 +137,29 @@ export default class SCountdownComponent extends SWebComponent {
    */
   _update$Refs() {
     this._$years = this.querySelector(`[${this.componentNameDash}-years]`)
-    if (this._$years) this._$years.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$years)
+      this._$years.classList.add(`${this.componentNameDash}-digit-container`)
     this._$months = this.querySelector(`[${this.componentNameDash}-months]`)
-    if (this._$months) this._$months.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$months)
+      this._$months.classList.add(`${this.componentNameDash}-digit-container`)
     this._$days = this.querySelector(`[${this.componentNameDash}-days]`)
-    if (this._$days) this._$days.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$days)
+      this._$days.classList.add(`${this.componentNameDash}-digit-container`)
     this._$hours = this.querySelector(`[${this.componentNameDash}-hours]`)
-    if (this._$hours) this._$hours.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$hours)
+      this._$hours.classList.add(`${this.componentNameDash}-digit-container`)
     this._$minutes = this.querySelector(`[${this.componentNameDash}-minutes]`)
-    if (this._$minutes) this._$minutes.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$minutes)
+      this._$minutes.classList.add(`${this.componentNameDash}-digit-container`)
     this._$seconds = this.querySelector(`[${this.componentNameDash}-seconds]`)
-    if (this._$seconds) this._$seconds.classList.add(`${this.componentNameDash}-digit-container`)
+    if (this._$seconds)
+      this._$seconds.classList.add(`${this.componentNameDash}-digit-container`)
   }
 
   /**
    * Tick function
    */
   _tick() {
-
     // start date
     let start = Date.now()
     if (this.props.startTimestamp) {
@@ -148,6 +170,8 @@ export default class SCountdownComponent extends SWebComponent {
     if (this.props.endTimestamp < start / 1000) {
       // stop the timer
       this._timer.stop()
+      // remove the active class on the element itself
+      this.classList.remove("active")
       // wait 1 second to compense the countdown display
       setTimeout(() => {
         // onComplete callback
@@ -156,7 +180,28 @@ export default class SCountdownComponent extends SWebComponent {
     }
 
     // get the timespan object from now to the end of the countdown
-    this._timespan = countdown(start, new Date(this.props.endTimestamp * 1000));
+    this._timespan = countdown(
+      start,
+      new Date(
+        this.props.endTimestamp < start / 1000
+          ? Date.now()
+          : this.props.endTimestamp * 1000
+      )
+    )
+
+    // calculate the number of seconds left
+    const secondsLeft =
+      (this._timespan.end.getTime() - this._timespan.start.getTime()) / 1000
+
+    console.log(secondsLeft)
+
+    // loop on each stepClasses to apply them if needed
+    for (const key in this.props.stepClasses) {
+      const value = this.props.stepClasses[key]
+      if (secondsLeft <= value) {
+        this.classList.add(key)
+      }
+    }
 
     // update html using the timespan
     this._updateHtmlWithTimespan(this._timespan)
@@ -196,7 +241,6 @@ export default class SCountdownComponent extends SWebComponent {
    * @param    {String}    value    The new HTMLElement value
    */
   _updateDigit($elm, value) {
-
     // query the actual item in the html element
     const $actualElm = $elm.children[0]
     let duration = 0
@@ -208,7 +252,7 @@ export default class SCountdownComponent extends SWebComponent {
     }
 
     // append the new child
-    const $newElm = document.createElement('span')
+    const $newElm = document.createElement("span")
     $newElm.classList.add(`${this.componentNameDash}-digit`)
     $newElm.innerHTML = value
 
