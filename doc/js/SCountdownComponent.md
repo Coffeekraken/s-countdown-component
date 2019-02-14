@@ -41,6 +41,16 @@ Type : **{ Integer }**
 Default : **null**
 
 
+### stepClasses
+
+Specify some step classes that will be applied on the component itself depending on remaining seconds
+For example. A step class named `hour1` with a timing of `3600` will be applied during the last `3600` seconds of the countdown
+
+Type : **{ Object<Integer> }**
+
+Default : **{**
+
+
 ### onComplete
 
 Specify a callback to call on countdown complete

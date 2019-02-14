@@ -37,13 +37,15 @@
 2. [Install](#readme-install)
 3. [Get Started](#readme-get-started)
 4. [Digit](#readme-digit)
-5. [Javascript API](doc/js)
-6. [Sugar Web Components Documentation](https://github.com/coffeekraken/sugar/blob/master/doc/webcomponent.md)
-7. [Browsers support](#readme-browsers-support)
-8. [Code linting](#readme-code-linting)
-9. [Contribute](#readme-contribute)
-10. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
-11. [Licence](#readme-license)
+5. [Active class](#readme-active-class)
+6. [Step classes](#readme-step-classes)
+7. [Javascript API](doc/js)
+8. [Sugar Web Components Documentation](https://github.com/coffeekraken/sugar/blob/master/doc/webcomponent.md)
+9. [Browsers support](#readme-browsers-support)
+10. [Code linting](#readme-code-linting)
+11. [Contribute](#readme-contribute)
+12. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
+13. [Licence](#readme-license)
 
 <a name="readme-install"></a>
 ## Install
@@ -84,6 +86,42 @@ Each countdown elements like `[s-countdown-years]`, `[s-countdown-hours]`, etc..
 - `.s-countdown-digit--out`: The class applied on the digit that need to get out.
 
 > Note that the new digit will be added **when the previous one has finished his `out` animation/transition**.
+
+<a id="readme-active-class"></a>
+## Active class
+
+An active class will be applied on the element itself during the countdown and removed at the end. This is useful if you want to hide the countdown when it's finished.
+
+- `.active`: Applied on the component itself during the countdown
+
+<a id="readme-step-classes"></a>
+## Step classes
+
+Step classes are an interesting concept. There are classes applied depending on the number of seconds remaining in the countdown. By default, these are the step classes registered:
+
+```js
+stepClasses: {
+  week1: 3600 * 24 * 7,
+  day1: 3600 * 24,
+  hour1: 3600,
+  minutes30: 60 * 30,
+  minutes10: 60 * 10,
+  minutes5: 60 * 5,
+  minute1: 60
+},
+```
+
+Thie mean that the these classes will be applied on the countdown:
+
+- `.week1`: Applied when the countdown is less than 1 week left
+- `.day1`: Applied when the countdown is less than 1 day left
+- `.hour1`: Applied when the countdown is less than 1 hour left
+- `.minutes30`: Applied when the countdown is less than 30 minutes left
+- `.minutes10`: Applied when the countdown is less than 10 minutes left
+- `.minutes5`: Applied when the countdown is less than 5 minutes left
+- `.minute1`: Applied when the countdown is less than 1 minute left
+
+You can as well configure that by setting the `props.stepClasses` property
 
 <a id="readme-browsers-support"></a>
 ## Browsers support

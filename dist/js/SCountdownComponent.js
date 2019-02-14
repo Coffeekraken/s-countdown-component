@@ -73,7 +73,9 @@ function (_SWebComponent) {
       _get(_getPrototypeOf(SCountdownComponent.prototype), "componentMount", this).call(this); // add the global class on the element itself
 
 
-      this.classList.add(this.componentNameDash); // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
+      this.classList.add(this.componentNameDash); // add the active class on the element itself
+
+      this.classList.add("active"); // update html refs to elements like the $years, $months, $days, $hours, $minutes and $seconds
 
       this._update$Refs(); // create a new timer
 
@@ -140,8 +142,10 @@ function (_SWebComponent) {
 
       if (this.props.endTimestamp < start / 1000) {
         // stop the timer
-        this._timer.stop(); // wait 1 second to compense the countdown display
+        this._timer.stop(); // remove the active class on the element itself
 
+
+        this.classList.remove("active"); // wait 1 second to compense the countdown display
 
         setTimeout(function () {
           // onComplete callback
@@ -150,7 +154,19 @@ function (_SWebComponent) {
       } // get the timespan object from now to the end of the countdown
 
 
-      this._timespan = (0, _countdown.default)(start, new Date(this.props.endTimestamp * 1000)); // update html using the timespan
+      this._timespan = (0, _countdown.default)(start, new Date(this.props.endTimestamp < start / 1000 ? Date.now() : this.props.endTimestamp * 1000)); // calculate the number of seconds left
+
+      var secondsLeft = (this._timespan.end.getTime() - this._timespan.start.getTime()) / 1000;
+      console.log(secondsLeft); // loop on each stepClasses to apply them if needed
+
+      for (var key in this.props.stepClasses) {
+        var value = this.props.stepClasses[key];
+
+        if (secondsLeft <= value) {
+          this.classList.add(key);
+        }
+      } // update html using the timespan
+
 
       this._updateHtmlWithTimespan(this._timespan); // on tick callback
 
@@ -210,7 +226,7 @@ function (_SWebComponent) {
       } // append the new child
 
 
-      var $newElm = document.createElement('span');
+      var $newElm = document.createElement("span");
       $newElm.classList.add("".concat(this.componentNameDash, "-digit"));
       $newElm.innerHTML = value; // remove the old and add the new element
       // after than the old element has been animated/transitionned out
@@ -315,6 +331,22 @@ function (_SWebComponent) {
         startTimestamp: null,
 
         /**
+         * Specify some step classes that will be applied on the component itself depending on remaining seconds
+         * For example. A step class named `hour1` with a timing of `3600` will be applied during the last `3600` seconds of the countdown
+         * @prop
+         * @type    {Object<Integer>}
+         */
+        stepClasses: {
+          week1: 3600 * 24 * 7,
+          day1: 3600 * 24,
+          hour1: 3600,
+          minutes30: 60 * 30,
+          minutes10: 60 * 10,
+          minutes5: 60 * 5,
+          minute1: 60
+        },
+
+        /**
          * Specify a callback to call on countdown complete
          * @prop
          * @type    {Function}
@@ -338,7 +370,7 @@ function (_SWebComponent) {
   }, {
     key: "requiredProps",
     get: function get() {
-      return ['endTimestamp'];
+      return ["endTimestamp"];
     }
   }]);
 
